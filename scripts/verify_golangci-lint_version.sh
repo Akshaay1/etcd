@@ -16,6 +16,12 @@
 function install_golangci_lint() {
     echo "Installing golangci-lint ${GOLANGCI_LINT_VERSION}"
     (cd tools/mod && GOFLAGS="" GOBIN="$(go env GOPATH)/bin" go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint)
+    if ! command -v golangci-lint >/dev/null 2>&1; then
+        local gopath_bin
+        gopath_bin="$(go env GOPATH)/bin"
+        echo "golangci-lint was installed to ${gopath_bin}, but that directory is not on your PATH."
+        echo "Add it to your PATH, e.g.: export PATH=\"\$PATH:${gopath_bin}\""
+    fi
 }
 
 GOLANGCI_LINT_VERSION=$(cd tools/mod && go list -m -f '{{.Version}}' github.com/golangci/golangci-lint/v2)
